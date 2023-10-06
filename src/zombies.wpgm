@@ -1,0 +1,9 @@
+import wollok.game.*
+import example.*
+
+program juego {
+
+    juego.iniciar()
+    game.boardGround("img/grass_15.png") 
+    game.start()
+}
