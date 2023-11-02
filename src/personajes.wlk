@@ -38,8 +38,7 @@ object jorge {
 		 	
 			 }
 		 else{
-		 	game.say(self,"Agarre municion")
-		 	balas = balas + 3
+		 	balas += 3
 		 }
 	}
 	
@@ -77,7 +76,7 @@ object jorge {
 	
 	method disparar(){
 		if (balas > 0){
-			const bala = new Bala(position = self.position())
+			const bala = new Bala(position = self.position() , image=self.image())
 		    bala.orientacionBala()
 		    game.addVisual(bala)
 		    bala.movDisparo()
@@ -89,6 +88,8 @@ object jorge {
 		}
 		
 	}
+	
+	method efectoBala(balaQueDio){}
 }   
 
 
@@ -167,8 +168,9 @@ class Zombies {
  	method morir(){
  		game.onCollideDo(self,{elemento=> elemento.teChocoLaBala()})
  	}
- 	method teChocoLaBala(){
+ 	method efectoBala(balaQueDio){
  		self.desaparecer()
+ 		game.removeVisual(balaQueDio)
  	}
  	
  	

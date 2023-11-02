@@ -1,3 +1,4 @@
+
 import wollok.game.*
 import personajes.*
 import Fondos.*
@@ -6,6 +7,7 @@ const corazon2= new CorazonEstatico(position=game.at(2,13))
 const corazon3= new CorazonEstatico(position=game.at(3,13))
 const corazonNegro2 = new CorazonNegro(position=game.at(2,13))
 const corazonNegro3 = new CorazonNegro(position=game.at(3,13))
+
 
 object juego {
 	const anchoTotal= 20
@@ -23,10 +25,8 @@ object juego {
 		game.addVisual(corazon2)
 		game.addVisual(corazon3)
 		game.addVisual(reloj)
-		
+		reloj.iniciar()
 		game.onCollideDo(jorge , {algo => algo.teAgarroJorge()})
-		
-		
 		
 		 keyboard.up().onPressDo( {jorge.moverArriba()})
 		 keyboard.right().onPressDo( {jorge.moverDerecha()})
@@ -34,7 +34,7 @@ object juego {
 		 keyboard.down().onPressDo( {jorge.moverAbajo()})
 		 keyboard.space().onPressDo({jorge.disparar()})
 		
-		reloj.iniciar()
+		
 		
 		self.generarZombies()
 		self.generarPotenciadores()
@@ -81,9 +81,10 @@ object juego {
 }
  
 class Potenciadores{
-	const position
+	var position
 	var image 
-	var tipo 
+	var tipo=""
+	var property perfil=null
 	method teAgarroJorge(){
 		jorge.aumentar(tipo)
 		game.removeVisual(self)
@@ -109,15 +110,23 @@ class Potenciadores{
 	}
 	method position()= position
 	
+	method efectoBala(balaQueDio){}
 }
+
 class CorazonEstatico{
 	var property position 
 	method image() = "img/pngegg.png"
 	method teAgarroJorge(){}
+	method efectoBala(balaQueDio){}
 }
-class Corazon{
-	var property position
-	method image() = "img/pngegg.png"
+
+class CorazonNegro inherits CorazonEstatico{
+	override method image() = "img/corazonNegro.png"
+}
+
+class Corazon inherits Potenciadores{
+	override method position() = position
+	override method image() = "img/pngegg.png"
 	
 	
 	method sacarCorazon(){
@@ -131,24 +140,24 @@ class Corazon{
 	
 }
 
-class CorazonNegro inherits CorazonEstatico{
-	override method image() = "img/corazonNegro.png"
-}
 
-class Bala{
-	var property position = null
-	var property image = self.perfil()
-	var property perfil = "bala_izq"
-	method image() = "img/" + self.perfil() +".png"
+class Bala inherits Potenciadores(perfil = "bala_izq" ) {
+	
+	override method position() =  position
+	
+	override method perfil()= perfil 
+	
+	override method image() = "img/" + self.perfil() +".png"
 	
 	
 	
 	method movDisparo(){
 		game.onTick(100 , "moverse",{self.moverse()})
-		
+		game.onCollideDo(self , {algo => algo.efectoBala(self)})
 	}
 	
-	method teAgarroJorge(){}
+	override method teAgarroJorge(){}
+	
 	method orientacionBala(){
 		if (jorge.perfil() == "personaje_Arriba" ){
 			self.perfil("bala_arriba")
