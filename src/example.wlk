@@ -1,23 +1,32 @@
-
-/*
- * HACER QUE LOS ZOMBIES CAMBIEN DE DIRECCION 
- * HACER QUE EL PERSONAJE DISPARE 
- * DARLE FUNCIONES A VIDA Y MUNICION
- * MOSTRAR MUNICION
- * 
- * */
-
 import wollok.game.*
-import direcciones.*
+import personajes.*
+import Fondos.*
+const corazon1= new CorazonEstatico(position=game.at(1,13))
+const corazon2= new CorazonEstatico(position=game.at(2,13))
+const corazon3= new CorazonEstatico(position=game.at(3,13))
+const corazonNegro2 = new CorazonNegro(position=game.at(2,13))
+const corazonNegro3 = new CorazonNegro(position=game.at(3,13))
 
 object juego {
+	const anchoTotal= 20
+	const altoTotal = 14
 	method iniciar(){
+		game.clear()
+		/*Aumenta la dimension de las celdas */
+		game.cellSize(70)
 		
-		game.width(50)
-		game.height(35)
+		game.width(anchoTotal)			
+		game.height(altoTotal)
+		game.boardGround("img/grass_15.png") 
 		game.addVisualCharacter(jorge)	
+		game.addVisual(corazon1)
+		game.addVisual(corazon2)
+		game.addVisual(corazon3)
+		game.addVisual(reloj)
 		
 		game.onCollideDo(jorge , {algo => algo.teAgarroJorge()})
+		
+		
 		
 		 keyboard.up().onPressDo( {jorge.moverArriba()})
 		 keyboard.right().onPressDo( {jorge.moverDerecha()})
@@ -25,16 +34,15 @@ object juego {
 		 keyboard.down().onPressDo( {jorge.moverAbajo()})
 		 keyboard.space().onPressDo({jorge.disparar()})
 		
-		
+		reloj.iniciar()
 		
 		self.generarZombies()
 		self.generarPotenciadores()
-		/* A LOS 20 SEGUNDOS DESAPARECEN TODOS LOS ZOMBIES */
-		//game.schedule(20000,{game.removeTickEvent("aparece zombie")})
+		
 	}
 	
 	method generarZombies(){
-		game.onTick(1000 , "aparece zombie" , {new Zombies().aparecer()})
+		game.onTick(2000 , "aparece zombie" , {new Zombies().aparecer()})
 	}
 	
 	method generarPotenciadores(){
@@ -53,13 +61,7 @@ object juego {
 		}else{
 			const potenciadorMunicion = new Potenciadores(position=pos , tipo = "municion" , image="img/bala.png")
 			game.addVisual(potenciadorMunicion)
-		}
-		
-		
-		
-		
-		
-		
+		}	
 	}
 	
 	method posicionAleatoria()= game.at(
@@ -67,137 +69,17 @@ object juego {
 		0.randomUpTo(game.height())
 	)
 	
-	
-	/*img/personaje_Abajo.png */
-	
-}
- /*PROTAGONISTA */
-object jorge {
-	var property position = game.center()
-	var vidas = 5
-	var property balas = 10
-	var property image = self.perfil()
-	var property perfil = "personaje_Abajo"
-	method image() = "img/" + self.perfil() +".png"
-	//keyboard.enter().onPressDo({game.removeTickEvent("aparecer invasor")})
-	
-
-	method moverArriba(){
- 		self.perfil("personaje_Arriba")				 
- }
- 	
-    method moverAbajo(){
- 		self.perfil("personaje_Abajo")
- }
- 	
- 	method moverDerecha(){
- 		
- 		self.perfil("personaje_Derecha")
- 	} 
- 	
- 	method moverIzquierda(){
- 		
- 		self.perfil("personaje_Izq")
- 	}
-	
-	method aumentar(tipo){
-		 if(tipo == "vida" ){
-		 	vidas ++
-		 	game.say(jorge,"Tengo" + jorge.vidas() + " vidas.")
-		 }else{
-		 	game.say(jorge,"Agarre municion")
-		 }
-	}
-	
-	
-	
-	method perderVida(){
-		vidas -= 1
-	}
-	method vidas() = vidas
-	
-	method disparar(){
-		new Bala().disparoIni()
-	}
-}   
-
-
-/*ZOMBIES */
-class Zombies {
-	var property position = null
-	var property image = self.perfil()
-	var property perfil = "zombie_Abajo"
-	method teAgarroJorge(){
-		jorge.perderVida()
-		game.say(jorge,"Me quedan " + jorge.vidas() + " vidas.")
-		self.desaparecer()
-	}
-	
-	method desaparecer(){
-		if(game.hasVisual(self))
-			game.removeVisual(self)
-		game.removeTickEvent("acercarse")
-	}
-	
-	method aparecer(){
-		position = juego.posicionAleatoria()
-		game.addVisual(self)
-		self.perseguirAJorge()
+	method gameOver(){
 		
+        game.clear()
+        juegoTerminado.sucede()
+        
+        keyboard.f().onPressDo{game.stop()}
+       	keyboard.p().onPressDo{self.iniciar()}
+   
 	}
-	
-	
-	
-	method perseguirAJorge(){
-		game.onTick(550 , "acercarse",{self.darUnPaso(jorge.position())})
-	}
-	
-	method darUnPaso(destino){
-		if ((position.x() + ((destino.x()-position.x())/6000).roundUp()) > position.x()){
-			self.derecha()
-		}
-		else if ((position.x() + ((destino.x()-position.x())/6000).roundUp()) < position.x()){
-			self.izquierda()
-		}
-		else if ((position.y() + ((destino.y()-position.y())/6000).roundUp()) > position.y()){
-			self.arriba()
-		}
-		else if ((position.y() + ((destino.y()-position.y())/6000).roundUp()) < position.y()){
-			self.abajo()
-		}	
-		position = game.at(
-		position.x() + ((destino.x()-position.x())/3).roundUp(),
-		position.y() + ((destino.y()-position.y())/3).roundUp()
-		)
-	}
-	
-	method image()= "img/" + self.perfil() +".png"
-	
-	method arriba(){
- 		self.perfil("zombie_Arriba")				 
- 	}
- 	
- 	method abajo(){
- 		
- 		self.perfil("zombie_Abajo")
- 	}
- 	
- 	method derecha(){
- 		
- 		self.perfil("zombie_Der")
- 	} 
- 	
- 	method izquierda(){
- 		
- 		self.perfil("zombie_izq")
- 	}
 }
-
-
-
-
-
-
+ 
 class Potenciadores{
 	const position
 	var image 
@@ -208,6 +90,8 @@ class Potenciadores{
 		game.schedule(5000 , {juego.generarPotenciador(tipo)} )
 		
 	}
+	
+	
 	  /*HACE APARECER EL POTENCIADOR CADA 5 SEGUNDOS */
 	method aparecer(){
 		game.schedule(5000,{self.desaparecer()})
@@ -226,20 +110,92 @@ class Potenciadores{
 	method position()= position
 	
 }
+class CorazonEstatico{
+	var property position 
+	method image() = "img/pngegg.png"
+	method teAgarroJorge(){}
+}
+class Corazon{
+	var property position
+	method image() = "img/pngegg.png"
+	
+	
+	method sacarCorazon(){
+		game.removeVisual(self)
+	}
+	
+	method agregarCorazon(){
+		game.addVisual(self)
+	}
+	
+	
+}
+
+class CorazonNegro inherits CorazonEstatico{
+	override method image() = "img/corazonNegro.png"
+}
 
 class Bala{
 	var property position = null
 	var property image = self.perfil()
-	var property perfil = "funny_bala"
+	var property perfil = "bala_izq"
+	method image() = "img/" + self.perfil() +".png"
+	
+	
 	
 	method movDisparo(){
-		game.onTick(1000 , "moverse",{self.disparo2()})
+		game.onTick(100 , "moverse",{self.moverse()})
+		
+	}
+	
+	method teAgarroJorge(){}
+	method orientacionBala(){
+		if (jorge.perfil() == "personaje_Arriba" ){
+			self.perfil("bala_arriba")
+			
+			/*jorge.balas() == jorge.balas() - 1*/
+			
+			self.moverse()
+		}
+		else if (jorge.perfil() == "personaje_Abajo"){
+			self.perfil("bala_abajo")
+			
+			self.moverse()
+		}
+		else if (jorge.perfil() == "personaje_Derecha" ){
+			self.perfil("bala_der")
+			
+			
+			self.moverse()
+		}
+		else if (jorge.perfil() == "personaje_izq" ){
+			self.perfil("bala_izq")
+			self.moverse()
+		}
+	}
+	
+	
+	
+	method moverse(){
+		if (perfil == "bala_arriba"){
+			position = position.up(1)
+		}
+		else if (perfil == "bala_abajo"){
+			position = position.down(1)
+		}
+		else if (perfil == "bala_der"){
+			position = position.right(1)
+		}
+		else if (perfil == "bala_izq"){
+			position = position.left(1)
+		}
+		
 	}
 	method disparoIni(){
 		if (jorge.perfil() == "personaje_Arriba" && jorge.balas() != 0){
 			self.perfil("funny_bala4")
-			game.addVisual(self)
-			jorge.balas() == jorge.balas() - 1
+			
+			/*jorge.balas() == jorge.balas() - 1*/
 			position = jorge.position().up(1)
 			self.movDisparo()
 		}
@@ -266,23 +222,13 @@ class Bala{
 		else{
 			/*game.say(jorge,"No tengo balas")*/
 		}
+		
+	
+	
+	
+	
 	}
 	
-	method disparo2(){
-		if (image == "funny_bala4"){
-			position.up(1)
-		}
-		else if (image == "funny_bala2"){
-			position.down(1)
-		}
-		else if (image == "funny_bala3"){
-			position.right(1)
-		}
-		else if (image == "funny_bala"){
-			position.left(1)
-		}
-	}
-
-}
-
-
+	
+	
+}	
