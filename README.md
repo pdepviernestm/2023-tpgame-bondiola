@@ -10,8 +10,8 @@
 
 ![captura 1](https://github.com/pdepviernestm/2023-tpgame-bondiola/assets/101006860/12fa0e06-c01c-4c64-bc67-95c3f1920935)
 ![captura12](https://github.com/pdepviernestm/2023-tpgame-bondiola/assets/101006860/95010d17-9f88-4cf2-9779-3751ce4b4eda)
-![captura3](https://github.com/pdepviernestm/2023-tpgame-bondiola/assets/101006860/beb48838-93be-4081-94ab-32edc54d803c)
 ![captura5](https://github.com/pdepviernestm/2023-tpgame-bondiola/assets/101006860/b4595d0a-943e-40f8-b0c6-7ec021e30e33)
+![captura3](https://github.com/pdepviernestm/2023-tpgame-bondiola/assets/101006860/beb48838-93be-4081-94ab-32edc54d803c)
 
 
 ## Reglas de Juego / Instrucciones
