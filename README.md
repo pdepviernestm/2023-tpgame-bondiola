@@ -16,7 +16,7 @@
 
 ## Reglas de Juego / Instrucciones
 
-Sobrevivir el mayor tiempo posible de los zombies, recolectando vidas y munición. Al pasar 1 segundo, 
+Sobrevivir el mayor tiempo posible de los zombies, recolectando vidas y munición. Al pasar cada segundo vivo, en la esquina superior derecha se sumaran 10 puntos, al recoger un corazon con poca vida, se sumara 1 vida extra, y al recoger munición, se sumarán 3 balas a la munición
 
 
 ## Otros
