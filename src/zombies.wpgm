@@ -1,9 +1,11 @@
 import wollok.game.*
 import example.*
+import Fondos.*
+
 
 program juego {
 
-    juego.iniciar()
-    game.boardGround("img/grass_15.png") 
+    juego.iniciar()    
     game.start()
+
 }
