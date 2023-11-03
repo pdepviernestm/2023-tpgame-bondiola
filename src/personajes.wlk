@@ -7,41 +7,23 @@ object jorge {
 	var property position = game.center()
 	var property vidas = 3
 	var property balas = 10
-	var property image = self.perfil()
-	var property perfil = "personaje_Abajo"
-	method image() = "img/" + self.perfil() +".png"
+	var property direccion = "Abajo"
+	method image() = "img/personaje_" + self.direccion() +".png"
 	//keyboard.enter().onPressDo({game.removeTickEvent("aparecer invasor")})
 	
 
-	method moverArriba(){
- 		self.perfil("personaje_Arriba")				 
- }
- 	
-    method moverAbajo(){
- 		self.perfil("personaje_Abajo")
- }
- 	
- 	method moverDerecha(){
- 		
- 		self.perfil("personaje_Derecha")
- 	} 
- 	
- 	method moverIzquierda(){
- 		
- 		self.perfil("personaje_Izq")
- 	}
+	method apuntar(dir){
+ 		self.direccion(dir)
+ 		}
 	
-	method aumentar(tipo){
-		 if(tipo == "vida"){
+	method aumentarVida(){
 		 	if(self.vidas() < 3 )
 		 	self.ganarVida()
-		 	
-			 }
-		 else{
-		 	balas += 3
-		 }
 	}
 	
+	method aumentarMunicion(){
+		balas += 3
+	}
 	
 	
 	method perderVida(){
