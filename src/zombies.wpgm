@@ -1,0 +1,10 @@
+import wollok.game.*
+import example.*
+import Fondos.*
+
+program juego {
+
+	juego.iniciar()
+	game.start()
+
+} 
