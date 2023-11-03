@@ -101,7 +101,7 @@ class Zombies {
 	method teAgarroJorge(){
 		jorge.perderVida()
 		if(jorge.vidas() > 0){	
-		game.say(jorge,"Me quedan " + jorge.vidas() + " vidas.")
+		game.say(jorge,"AIA!")
 		self.desaparecer()
 		}
 	
@@ -165,9 +165,7 @@ class Zombies {
  		
  		self.perfil("zombie_izq")
  	}
- 	method morir(){
- 		game.onCollideDo(self,{elemento=> elemento.teChocoLaBala()})
- 	}
+ 	
  	method efectoBala(balaQueDio){
  		self.desaparecer()
  		game.removeVisual(balaQueDio)
