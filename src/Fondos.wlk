@@ -12,15 +12,20 @@ object juegoTerminado{
 }
 
 object reloj {
-
     var tiempo = 0
-	method teAgarroJorge(){
-		
-	}
+    var property equis = game.width()-1
+    var property i = game.height()-1
+	method teAgarroJorge(){}
+	
     method text() = tiempo.toString()
     method textColor() = paleta.rojo()
-    method position() = game.at(game.width()-1, game.height()-1)
+    method position() = game.at(equis, i)
 
+    method nuevaPosicion(x,y){
+    	equis = x
+    	i = y
+    }
+    
     method pasarTiempo() {
         tiempo = tiempo + 1
     }
@@ -36,6 +41,7 @@ object reloj {
          game.say(game,"Tiempo total" + tiempo)
      }
 }
+
 
     object paleta {
     const property rojo = "FF0000FF"
