@@ -2,9 +2,9 @@
 import wollok.game.*
 import personajes.*
 import Fondos.*
-const corazon1= new CorazonEstatico(position=game.at(1,13))
-const corazon2= new CorazonEstatico(position=game.at(2,13))
-const corazon3= new CorazonEstatico(position=game.at(3,13))
+const corazon1= new Estatico(position=game.at(1,13))
+const corazon2= new Estatico(position=game.at(2,13))
+const corazon3= new Estatico(position=game.at(3,13))
 const corazonNegro2 = new CorazonNegro(position=game.at(2,13))
 const corazonNegro3 = new CorazonNegro(position=game.at(3,13))
 
@@ -25,7 +25,10 @@ object juego {
 		game.addVisual(corazon2)
 		game.addVisual(corazon3)
 		game.addVisual(reloj)
+		game.addVisual(contadorBalas)
+		game.addVisual(balaEstatica)
 		reloj.iniciar()
+		contadorBalas.iniciar()
 		game.onCollideDo(jorge , {algo => algo.teAgarroJorge()})
 		
 		 keyboard.up().onPressDo( {jorge.moverArriba()})
@@ -33,7 +36,6 @@ object juego {
 		 keyboard.left().onPressDo( {jorge.moverIzquierda()})
 		 keyboard.down().onPressDo( {jorge.moverAbajo()})
 		 keyboard.space().onPressDo({jorge.disparar()})
-		
 		
 		
 		self.generarZombies()
@@ -73,7 +75,9 @@ object juego {
 		
         game.clear()
         juegoTerminado.sucede()
-        
+		game.addVisual(reloj)
+		reloj.nuevaPosicion(9,4)
+		
         keyboard.f().onPressDo{game.stop()}
        	keyboard.p().onPressDo{self.iniciar()}
    
@@ -113,15 +117,22 @@ class Potenciadores{
 	method efectoBala(balaQueDio){}
 }
 
-class CorazonEstatico{
+class Estatico{
 	var property position 
 	method image() = "img/pngegg.png"
 	method teAgarroJorge(){}
 	method efectoBala(balaQueDio){}
 }
 
-class CorazonNegro inherits CorazonEstatico{
+class CorazonNegro inherits Estatico{
 	override method image() = "img/corazonNegro.png"
+}
+
+object balaEstatica{
+	method position() = game.at(9,13)
+	method image() = "img/bala_arriba.png"
+	method teAgarroJorge(){}
+	method efectoBala(balaQueDio){}
 }
 
 class Corazon inherits Potenciadores{
@@ -240,4 +251,23 @@ class Bala inherits Potenciadores(perfil = "bala_izq" ) {
 	
 	
 	
-}	
+}
+
+object contadorBalas{
+	
+	var cantBalas = jorge.balas()
+	
+	method text() = cantBalas.toString()
+	method textColor() = paleta.rojo()
+	method position() = game.at(10,13)
+	
+	method actualizo(){
+		cantBalas = jorge.balas()
+	}
+	method iniciar(){
+        game.onTick(1,"revisa balas",{self.actualizo()})
+        }
+        method teAgarroJorge(){}
+	method efectoBala(balaQueDio){}
+   
+}
