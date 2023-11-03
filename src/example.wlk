@@ -31,10 +31,10 @@ object juego {
 		contadorBalas.iniciar()
 		game.onCollideDo(jorge , {algo => algo.teAgarroJorge()})
 		
-		 keyboard.up().onPressDo( {jorge.moverArriba()})
-		 keyboard.right().onPressDo( {jorge.moverDerecha()})
-		 keyboard.left().onPressDo( {jorge.moverIzquierda()})
-		 keyboard.down().onPressDo( {jorge.moverAbajo()})
+		 keyboard.up().onPressDo( {jorge.apuntar('Arriba')})
+		 keyboard.right().onPressDo( {jorge.apuntar('Derecha')})
+		 keyboard.left().onPressDo( {jorge.apuntar('Izq')})
+		 keyboard.down().onPressDo( {jorge.apuntar('Abajo')})
 		 keyboard.space().onPressDo({jorge.disparar()})
 		
 		
@@ -90,7 +90,7 @@ class Potenciadores{
 	var tipo=""
 	var property perfil=null
 	method teAgarroJorge(){
-		jorge.aumentar(tipo)
+		//jorge.aumentar(tipo)
 		game.removeVisual(self)
 		game.schedule(5000 , {juego.generarPotenciador(tipo)} )
 		
@@ -109,9 +109,7 @@ class Potenciadores{
 	method image()= image
 	
 	
-	method animarse(){
-		
-	}
+	
 	method position()= position
 	
 	method efectoBala(balaQueDio){}
@@ -139,6 +137,10 @@ class Corazon inherits Potenciadores{
 	override method position() = position
 	override method image() = "img/pngegg.png"
 	
+	override method teAgarroJorge(){
+		super()
+		jorge.aumentarVida()
+	}
 	
 	method sacarCorazon(){
 		game.removeVisual(self)
@@ -167,28 +169,31 @@ class Bala inherits Potenciadores(perfil = "bala_izq" ) {
 		game.onCollideDo(self , {algo => algo.efectoBala(self)})
 	}
 	
-	override method teAgarroJorge(){}
+	override method teAgarroJorge(){
+		super()
+		jorge.aumentarMunicion()
+	}
 	
 	method orientacionBala(){
-		if (jorge.perfil() == "personaje_Arriba" ){
+		if (jorge.direccion() == "Arriba" ){
 			self.perfil("bala_arriba")
 			
 			/*jorge.balas() == jorge.balas() - 1*/
 			
 			self.moverse()
 		}
-		else if (jorge.perfil() == "personaje_Abajo"){
+		else if (jorge.direccion() == "Abajo"){
 			self.perfil("bala_abajo")
 			
 			self.moverse()
 		}
-		else if (jorge.perfil() == "personaje_Derecha" ){
+		else if (jorge.direccion() == "Derecha" ){
 			self.perfil("bala_der")
 			
 			
 			self.moverse()
 		}
-		else if (jorge.perfil() == "personaje_izq" ){
+		else if (jorge.direccion() == "Izq" ){
 			self.perfil("bala_izq")
 			self.moverse()
 		}
@@ -212,28 +217,28 @@ class Bala inherits Potenciadores(perfil = "bala_izq" ) {
 		
 	}
 	method disparoIni(){
-		if (jorge.perfil() == "personaje_Arriba" && jorge.balas() != 0){
+		if (jorge.direccion() == "Arriba" && jorge.balas() != 0){
 			self.perfil("funny_bala4")
 			
 			/*jorge.balas() == jorge.balas() - 1*/
 			position = jorge.position().up(1)
 			self.movDisparo()
 		}
-		else if (jorge.perfil() == "personaje_Abajo" && jorge.balas() != 0){
+		else if (jorge.direccion() == "Abajo" && jorge.balas() != 0){
 			self.perfil("funny_bala2")
 			game.addVisual(self)
 			jorge.balas() == jorge.balas() - 1
 			position = jorge.position().down(1)
 			self.movDisparo()
 		}
-		else if (jorge.perfil() == "personaje_Der" && jorge.balas() != 0){
+		else if (jorge.direccion() == "Derecha" && jorge.balas() != 0){
 			self.perfil("funny_bala3")
 			game.addVisual(self)
 			jorge.balas() == jorge.balas().right(1)
 			position = jorge.position() + position.x(1)
 			self.movDisparo()
 		}
-		else if (jorge.perfil() == "personaje_izq" && jorge.balas() != 0){
+		else if (jorge.direccion() == "Izq" && jorge.balas() != 0){
 			game.addVisual(self)
 			jorge.balas() == jorge.balas().left(1)
 			position = jorge.position() - position.x(1)
