@@ -62,7 +62,7 @@ object juego {
 	)
 	
 	
-	/*img/personaje_Abajo.png */
+	
 	
 }
  /*PROTAGONISTA */
@@ -122,7 +122,7 @@ class Zombies {
 	
 	method teAgarroJorge(){
 		jorge.perderVida()
-		game.say(jorge,"Me quedan " + jorge.vidas() + " vidas.")
+		
 		self.desaparecer()
 	}
 	
